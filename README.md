@@ -14,8 +14,11 @@
       > https://hackmd.io/@NrN0buuTTp6lMAQ5lPMhNw/ry5D6WFnc   
       >관련논문   
       > https://scienceon.kisti.re.kr/commons/util/originalView.do?cn=JAKO201761242144589&oCn=JAKO201761242144589&dbt=JAKO&journal=NJOU00567471<br>
-      >cctv 모션감지에 대한 참고자료
-      >https://return-value.tistory.com/106
+      >cctv 모션감지에 대한 참고자료<br>
+      >https://return-value.tistory.com/106<br>
+      >https://scribblinganything.tistory.com/544
+      
+      
 2. 글자 인식 카메라 (*카메라*)
    1. 글자 번역 제공 카메라
    2. 사진 및 책, 문서 스캐너
