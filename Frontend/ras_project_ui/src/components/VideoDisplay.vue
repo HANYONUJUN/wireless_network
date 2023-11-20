@@ -1,43 +1,44 @@
 <template>
-    <div>
-      <div id="imageContainer">
-        <img id="liveImage" :src="videoSource" alt="Live Image">
-      </div>
+ 
+    <div id="imageContainer">
+      <img id="liveImage" :src="videoSource" :style="{ transform: `scale(${zoomLevel})` }" alt="Live Image">
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        videoSource: ''
-      };
-    },
-    methods: {
-      initWebSocket() {
-        const ws = new WebSocket(process.env.VUE_APP_WEBSOCKET_URL);
-  
-        ws.onmessage = event => {
-          this.updateVideoSource(event.data);
-        };
-  
-        ws.onclose = event => {
-          console.error("WebSocket closed:", event);
-        };
-      },
-      updateVideoSource(newSource) {
-        const blob = new Blob([newSource], { type: 'image/jpeg' });
-        const imageUrl = URL.createObjectURL(blob);
-        this.videoSource = imageUrl;
+
+    <div class="pm_btn">
+    <button @click="zoomIn">확대</button>
+    <button @click="zoomOut">축소</button>
+  </div>
+</template>
+
+<script>
+import websocket from '../usedata/websocket';
+import '../css/main.css';
+
+export default {
+  data() {
+    return {
+      videoSource: '',
+      zoomLevel: 1.0,
+    };
+  },
+  methods: {
+    zoomIn() {
+      if (this.zoomLevel < 2.0) {
+        this.zoomLevel += 0.1;
       }
     },
-    mounted() {
-      this.initWebSocket();
-    }
-  };
-  </script>
-  
-  <style scoped>
+    zoomOut() {
+      if (this.zoomLevel > 0.5) {
+        this.zoomLevel -= 0.1;
+      }
+    },
+  },
+  mixins: [websocket],
+  mounted() {
+    this.initWebSocket();
+  },
+};
+</script>
 
-</style>
+
   
