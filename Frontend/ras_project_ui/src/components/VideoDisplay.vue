@@ -15,7 +15,7 @@
     },
     methods: {
       initWebSocket() {
-        const ws = new WebSocket('ws://3.36.126.107:8000/ws_b');
+        const ws = new WebSocket(process.env.VUE_APP_WEBSOCKET_URL);
   
         ws.onmessage = event => {
           this.updateVideoSource(event.data);
