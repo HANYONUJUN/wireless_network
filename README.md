@@ -1,5 +1,5 @@
 # 1조 무선네트워크 프로젝트
-**팀원 : 김민규(MMMMins), 한용준(HANYONUJUN), 서예령(yeryeong0519@), 신건호(geonhooo), 이정우(wjddn8038), 김건우(inhatckgw)**
+**팀원 : 김민규(MMMMins/조장), 한용준(HANYONUJUN), 서예령(yeryeong0519@), 신건호(geonhooo), 이정우(wjddn8038), 김건우(inhatckgw)**
 
 --- 
 ### 프로젝트 아이디어 의견제시
