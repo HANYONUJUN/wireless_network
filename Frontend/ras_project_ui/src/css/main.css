@@ -71,6 +71,14 @@ body{
     margin-left: 13%;
 }
 
+#info_btn{
+    margin-top:2%;
+    margin-left: 43%;
+    padding: 30px 50px;
+    border-radius: 30px;
+    
+}
+
 #log_it {
     margin-top: -23%;
     margin-left: 10%;

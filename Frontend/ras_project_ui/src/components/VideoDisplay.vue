@@ -24,8 +24,9 @@
             <input type="date">
           </div>
         </div>
+        <button id="info_btn">등록</button>
       </td>
-        
+
       <td>
         <div class="rectangle2" id="log_it">
    

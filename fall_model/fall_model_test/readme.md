@@ -1,3 +1,7 @@
+## model 다운
+https://drive.google.com/file/d/1ri-IRMX6sfvutJgWdVmFwiEb8HyovBps/view?usp=drive_link
+
+
 ## image 파일들
 
 테스트할때 필요한 이미지들
@@ -18,6 +22,9 @@
   colab 기준
   
     Darknet 설치
+    https://drive.google.com/file/d/19LPcnMPCcdgyFMZlSIKRbDMSjOHji2cy/view?usp=drive_link
+
+    or
     
     git clone https://github.com/AlexeyAB/darknet.git
     %cd darknet
