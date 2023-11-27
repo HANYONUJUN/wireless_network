@@ -1,3 +1,7 @@
+## model 다운
+https://drive.google.com/file/d/1ri-IRMX6sfvutJgWdVmFwiEb8HyovBps/view?usp=drive_link
+
+
 ## image 파일들
 
 테스트할때 필요한 이미지들
