@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웹소켓 테스트</title>
+</head>
+<body>
+    <div id="imageContainer">
+        <img id="liveImage" src="" alt="Live Image">
+    </div>
+
+<script>
+    const socket = new WebSocket('ws://localhost:23241/ws_b');
+    const liveImageElement = document.getElementById('liveImage');
+
+    socket.onmessage = function (event) {
+        // 데이터를 Blob으로 변환
+        // const blob = new Blob([event.data], { type: 'image/jpeg' });
+        //
+        // // Blob을 Data URL로 변환
+        // const imageUrl = URL.createObjectURL(blob);
+        const imageUrl = event.data
+        // 이미지 엘리먼트의 src 속성을 업데이트하여 이미지 표시
+        liveImageElement.src = imageUrl;
+    };
+
+    socket.onclose = function (event) {
+        console.error("WebSocket closed:", event);
+    };
+</script>
+</body>
+</html>

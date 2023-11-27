@@ -6,6 +6,8 @@ import numpy as np
 from fastapi import FastAPI, WebSocket
 from starlette.websockets import WebSocketDisconnect
 from typing import List
+from datetime import datetime
+from Backend.AI.fall_model_test import process_image
 
 from model.model import ImageData
 
@@ -29,18 +31,22 @@ async def websocket_imagedata(websocket: WebSocket):
                 # Bytes를 OpenCV 이미지로 변환
                 nparr = np.frombuffer(img_data, np.uint8)
                 img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
 
+                ai_img = process_image(img, "AI/fall_detection_model.h5", f"AI/result/{current_time}.jpg")
                 # 이미지 저장
-                #current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-                #image_path = f"static/images/{current_time}.jpg"
 
+                img_data = None
+                if ai_img is not None:
+                    img_data = base64.b64encode(ai_img)
                 # 임시 이미지 저장 a.jpg
-                image_path = f"static/a.jpg"
-                cv2.imwrite(image_path, img)
+                #
+                # cv2.imwrite(image_path, img)
 
-                #이미지 저장시 사용
-                result = {"image_path": image_path}
-                await pitofront(img_data)
+                # 이미지 저장시 사용
+                # result = {"image_path": image_path}
+                if img_data is not None:
+                    await pitofront(f"../Backend/AI/result/{current_time}.jpg")
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
     except Exception as e:
@@ -68,11 +74,11 @@ async def socket_reset():
 
 
 # 두 소켓간 통신용
-async def pitofront(image_data: bytes):
+async def pitofront(image_path: str):
     try:
         for connection in websocket_b_connections:
             # 이미지 데이터와 함께 데이터를 전송
-            await connection.send_bytes(image_data)
+            await connection.send_text(image_path)
     except WebSocketDisconnect as e:
         print(f"WebSocket connection closed: {e}")
     except Exception as e:
