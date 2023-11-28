@@ -1,3 +1,7 @@
+## model 다운
+https://drive.google.com/file/d/1ri-IRMX6sfvutJgWdVmFwiEb8HyovBps/view?usp=drive_link
+
+
 ## image 파일들
 
 테스트할때 필요한 이미지들
@@ -18,6 +22,9 @@
   colab 기준
   
     Darknet 설치
+    https://drive.google.com/file/d/19LPcnMPCcdgyFMZlSIKRbDMSjOHji2cy/view?usp=drive_link
+
+    or
     
     git clone https://github.com/AlexeyAB/darknet.git
     %cd darknet
@@ -75,5 +82,5 @@
 
 ## 다음 작업 예정
 
-아직은 이미지만 쓰러짐 감지를 하는 모델만 학습했지만 다음엔 비디오를 감지하는 모델로 업그레이드 예정
-비디오가 잘 감지되면 실시간으로 라즈베리 파이 카메라랑 연동하여 감지하도록 모델 수정
+다른 동작시 그걸 감지하는 모델 가능하면 구현
+
