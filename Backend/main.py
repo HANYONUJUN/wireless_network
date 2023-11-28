@@ -31,9 +31,10 @@ engine = create_engine(
 session = sessionmaker(bind=engine)
 
 websocket_b_connections: List[WebSocket] = []
-
+i = 0
 @app.websocket("/ws_a")
 async def websocket_imagedata(websocket: WebSocket):
+    global ai_data
     await websocket.accept()
 
     try:
@@ -49,22 +50,27 @@ async def websocket_imagedata(websocket: WebSocket):
                 # Bytes를 OpenCV 이미지로 변환
                 nparr = np.frombuffer(img_data, np.uint8)
                 img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-                current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
 
+
+                current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
                 ai_img = process_image(img, "AI/fall_detection_model.h5", f"AI/result/{current_time}.jpg")
                 # 이미지 저장
 
-                img_data = None
                 if ai_img is not None:
-                    img_data = base64.b64encode(ai_img)
+                    ai_data = base64.b64decode(ai_img)
+                    await pitofront(ai_data)
+                else:
+                    await pitofront(img_data)
                 # 임시 이미지 저장 a.jpg
                 #
                 # cv2.imwrite(image_path, img)
 
                 # 이미지 저장시 사용
                 # result = {"image_path": image_path}
-                if img_data is not None:
-                    await pitofront(f"../Backend/AI/result/{current_time}.jpg")
+                # if ai_data is not None:
+                #     await pitofront(ai_data)
+                # else:
+                #     await pitofront(img_data)
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
     except Exception as e:
@@ -117,11 +123,11 @@ def smsrequest(phone: str = None):
 
 
 # 두 소켓간 통신용
-async def pitofront(image_path: str):
+async def pitofront(image_path: bytes):
     try:
         for connection in websocket_b_connections:
             # 이미지 데이터와 함께 데이터를 전송
-            await connection.send_text(image_path)
+            await connection.send_bytes(image_path)
     except WebSocketDisconnect as e:
         print(f"WebSocket connection closed: {e}")
     except Exception as e:

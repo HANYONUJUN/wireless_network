@@ -16,11 +16,10 @@
 
     socket.onmessage = function (event) {
         // 데이터를 Blob으로 변환
-        // const blob = new Blob([event.data], { type: 'image/jpeg' });
-        //
-        // // Blob을 Data URL로 변환
-        // const imageUrl = URL.createObjectURL(blob);
-        const imageUrl = event.data
+        console.log([event.data])
+        const blob = new Blob([event.data], { type: 'image/jpeg' });
+        // Blob을 Data URL로 변환
+        const imageUrl = URL.createObjectURL(blob);
         // 이미지 엘리먼트의 src 속성을 업데이트하여 이미지 표시
         liveImageElement.src = imageUrl;
     };
