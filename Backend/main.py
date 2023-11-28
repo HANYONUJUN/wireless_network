@@ -78,8 +78,12 @@ async def websocket_htmlimagedata(websocket: WebSocket):
     websocket_b_connections.append(websocket)
     try:
         while True:
-            data = await websocket.receive_text()
+            # 프론트에서 관리자 정보 수신
+            data = await websocket.recv()
             print(f"Received from B: {data}")
+            splitdata = data.split(',')
+            name = splitdata[0]
+            phonenumber = splitdata[1]
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
 
