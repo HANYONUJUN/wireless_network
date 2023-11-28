@@ -10,8 +10,8 @@
         <td>
           <div class="rectangle" id="serve_img">
 
-        </div>
-      </td>
+          </div>
+        </td>
 
       </tr>
       <button @click="startStreaming" id="camera_start_btn">Start Streaming</button>
@@ -19,30 +19,39 @@
         <td>
           <div class="rectangle2" id="user_it">
             <div id="user_input">
-            <input type="text" placeholder="이름">
-            <input type="text" placeholder="전화번호">
-            <input type="date">
+              <input type="text" v-model="name" placeholder="이름">
+              <input type="text" v-model="phone" placeholder="전화번호">
+              <input type="date">
+            </div>
           </div>
-        </div>
-        <button id="info_btn">등록</button>
-      </td>
+          <button id="info_btn">등록</button>
+        </td>
 
-      <td>
-        <div class="rectangle2" id="log_it">
-   
-          <div id="footer"></div>
-      </div>
-     </td>
+        <td>
+          <div class="rectangle2" id="log_it">
+            <div>
+              <div v-for="log in logs" :key="log.seq">
+                <p>{{ log.administrator }}</p>
+                <p>{{ log.phone }}</p>
+                <p>{{ log.logtime }}</p>
+                <p>{{ log.logpath }}</p>
+                <p>{{ log.smsflag }}</p>
+              </div>
+            </div>
+            <div id="footer"></div>
+          </div>
+        </td>
 
       </tr>
     </table>
   </div>
-  <!-- 생략... -->
 </template>
 
 <script>
-import websocket from '../usedata/websocket'; 
+import websocket from '../usedata/websocket';
 import '../css/main.css';
+import axios from 'axios';
+
 
 export default {
   data() {
@@ -50,13 +59,19 @@ export default {
       videoSource: '',
       isStreaming: false,
       ws: null,
+      name: "",
+      phone: "",
+      logs: [],  // logs 배열 추가
     };
   },
-
   methods: {
     startStreaming() {
       this.isStreaming = true;
       this.ws = websocket.initWebSocket();
+
+      this.ws.onopen = () => {
+        this.ws.send(this.name + "," + this.phone);
+      };
 
       this.ws.onmessage = event => {
         const blob = new Blob([event.data], { type: 'image/jpeg' });
@@ -67,6 +82,10 @@ export default {
         console.error("WebSocket closed:", event);
       };
     },
+  },
+  async created() {  // created 라이프사이클 훅에서 데이터 가져오기
+    const response = await axios.get('http://ip주소/docs#/default/logs_api_v1_logs_get');
+    this.logs = response.data;
   },
 };
 </script>
