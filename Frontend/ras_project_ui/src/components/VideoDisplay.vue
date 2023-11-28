@@ -45,7 +45,6 @@
       </tr>
     </table>
   </div>
-  <!-- 생략... -->
 </template>
 
 <script>
@@ -79,7 +78,7 @@ export default {
     },
   },
   async created() {  // created 라이프사이클 훅에서 데이터 가져오기
-    const response = await axios.get('http://10.200.43.222:23241/docs#/default/logs_api_v1_logs_get');
+    const response = await axios.get('http://ip주소/docs#/default/logs_api_v1_logs_get');
     this.logs = response.data;
   },
 };
