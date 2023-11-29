@@ -50,7 +50,7 @@
 <script>
 import websocket from '../usedata/websocket';
 import '../css/main.css';
-import axios from 'axios';
+//import axios from 'axios';
 
 
 export default {
@@ -83,9 +83,9 @@ export default {
       };
     },
   },
-  async created() {  // created 라이프사이클 훅에서 데이터 가져오기
-    const response = await axios.get('http://ip주소/docs#/default/logs_api_v1_logs_get');
-    this.logs = response.data;
-  },
+  //async created() {  // created 라이프사이클 훅에서 데이터 가져오기
+    //const response = await axios.get('http://ip주소/docs#/default/logs_api_v1_logs_get');
+    //this.logs = response.data;
+  //},
 };
 </script>
