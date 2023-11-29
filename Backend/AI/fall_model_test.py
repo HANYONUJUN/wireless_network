@@ -17,7 +17,6 @@ def process_image(img, model_path, output_path):
         classes = [line.strip() for line in f.readlines()]
     layer_names = net.getUnconnectedOutLayersNames()
     # 이미지 읽기
-    print(img)
     #img = cv2.imread(img_path)
 
     # 이미지가 정상적으로 읽어졌는지 확인
@@ -54,7 +53,6 @@ def process_image(img, model_path, output_path):
         # 사람을 검출하지 못한 경우 "not_detect" 출력
         if not person_detected:
             cv2.putText(img, "not_detect", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
-            cv2.imshow('', img)
         else:
             # 경계 상자 그리기
             indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
@@ -79,15 +77,20 @@ def process_image(img, model_path, output_path):
                         if class_index == 1:  # 클래스 1은 '쓰러짐' 클래스일 때
                             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                             cv2.putText(img, "fall", (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                            _, img_encoded = cv2.imencode('.jpg', img)
+                            img_bytes = base64.b64encode(img_encoded.tobytes())
+                            img_str = img_bytes.decode('utf-8')
+                            return img_str
                         else:
                             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                             cv2.putText(img, "not_fall", (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+                            return None
 
             # 결과 이미지 출력
             cv2.imwrite(output_path, img)
             #cv2.imshow("Result", img)
             #cv2.waitKey(0)
             cv2.destroyAllWindows()
+        return None
 
-        return img
 # 이미지 처리 함수 호출
