@@ -21,7 +21,7 @@
             <div id="user_input">
               <input type="text" v-model="name" placeholder="이름">
               <input type="text" v-model="phone" placeholder="전화번호">
-              <input type="date">
+              <input type="date" v-model="date">
             </div>
           </div>
           <button id="info_btn">등록</button>
@@ -62,6 +62,7 @@ export default {
       name: "",
       phone: "",
       logs: [],  // logs 배열 추가
+      date: "",
     };
   },
   methods: {
@@ -82,7 +83,13 @@ export default {
         console.error("WebSocket closed:", event);
       };
     },
+    setCurrentData() {
+      this.date = websocket.getCurrentData(); //날짜 설정 메소드 추가
+    }
   },
+  created() {
+    this.setCurrentData();
+  }
   //async created() {  // created 라이프사이클 훅에서 데이터 가져오기
     //const response = await axios.get('http://ip주소/docs#/default/logs_api_v1_logs_get');
     //this.logs = response.data;
