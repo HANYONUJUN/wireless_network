@@ -87,6 +87,10 @@ body{
     overflow: auto; 
   }
 
+#date_log{
+    color: white;
+}
+
 #key_word{
     color:white;
 }
