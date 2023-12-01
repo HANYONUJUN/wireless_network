@@ -30,6 +30,8 @@
         <td>
           <div class="rectangle2" id="log_it">
             <div>
+              <div v-for="(logs, date) in groupedLogs" :key="date" id="date_log">
+              <h2>-- {{ date }} --</h2>
               <div v-for="log in logs" :key="log.seq" id="key_word">
                 <p>{{ log.administrator }}</p>
                 <p>{{ log.phone }}</p>
@@ -39,7 +41,8 @@
               </div>
             </div>
           </div>
-        </td>
+        </div>
+      </td>
 
       </tr>
     </table>
@@ -94,9 +97,22 @@ export default {
       .catch(error => console.error(error));
     },
   },
+  computed: {
+    groupedLogs() {
+      return this.logs.reduce((groups, log) =>{
+        const date = log.logtime.split('T')[0];
+        if(!groups[date]) {
+          groups[date] = []
+        }
+        groups[date].push(log);
+        return groups;
+      }, {});
+    }
+  },
   created() {
     this.setCurrentData();
     this.fetchLogData(); // 컴포넌트가 생성될 때 로그 데이터를 가져옴
   },
 };
 </script>
+
