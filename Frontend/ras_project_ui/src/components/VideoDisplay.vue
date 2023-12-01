@@ -30,7 +30,7 @@
         <td>
           <div class="rectangle2" id="log_it">
             <div>
-              <div v-for="log in logs" :key="log.seq">
+              <div v-for="log in logs" :key="log.seq" id="key_word">
                 <p>{{ log.administrator }}</p>
                 <p>{{ log.phone }}</p>
                 <p>{{ log.logtime }}</p>
@@ -38,7 +38,6 @@
                 <p>{{ log.smsflag }}</p>
               </div>
             </div>
-            <div id="footer"></div>
           </div>
         </td>
 
@@ -48,9 +47,9 @@
 </template>
 
 <script>
+import axios from 'axios';
 import websocket from '../usedata/websocket';
 import '../css/main.css';
-//import axios from 'axios';
 
 
 export default {
@@ -85,14 +84,19 @@ export default {
     },
     setCurrentData() {
       this.date = websocket.getCurrentData(); //날짜 설정 메소드 추가
-    }
+    },
+    fetchLogData() {
+      axios.get(process.env.VUE_APP_API_URL) // API 주소 수정
+      .then(response => {
+        console.log(response.data); // 응답 데이터 콘솔에 출력
+        this.logs = response.data; // 응답 데이터를 logs 변수에 저장
+      })
+      .catch(error => console.error(error));
+    },
   },
   created() {
     this.setCurrentData();
-  }
-  //async created() {  // created 라이프사이클 훅에서 데이터 가져오기
-    //const response = await axios.get('http://ip주소/docs#/default/logs_api_v1_logs_get');
-    //this.logs = response.data;
-  //},
+    this.fetchLogData(); // 컴포넌트가 생성될 때 로그 데이터를 가져옴
+  },
 };
 </script>

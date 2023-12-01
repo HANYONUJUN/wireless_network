@@ -87,11 +87,8 @@ body{
     overflow: auto; 
   }
 
-#footer{
-    background-color: white;
-    width: 667px;
-    height: 125px;
-    margin-top: 48%;
-    border: 4px solid black;
+#key_word{
+    color:white;
 }
+
 
