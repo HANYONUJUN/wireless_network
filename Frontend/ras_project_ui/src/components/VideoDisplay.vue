@@ -33,11 +33,11 @@
               <div v-for="(logs, date) in groupedLogs" :key="date" id="date_log">
               <h2>-- {{ date }} --</h2>
               <div v-for="log in logs" :key="log.seq" id="key_word">
-                <p>{{ log.administrator }}</p>
-                <p>{{ log.phone }}</p>
-                <p>{{ log.logtime }}</p>
-                <p>{{ log.logpath }}</p>
-                <p>{{ log.smsflag }}</p>
+                <span>{{ log.administrator }} | </span>
+                <span>{{ log.phone }} | </span>
+                <span>{{ log.logtime }} | </span>
+                <span>{{ log.logpath }} | </span>
+                <span>{{ log.smsflag }}</span>
               </div>
             </div>
           </div>
