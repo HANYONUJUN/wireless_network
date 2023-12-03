@@ -85,6 +85,8 @@ body{
     width: 700px;
     height: 460px; 
     overflow: auto; 
+    text-align: center;
+    font-size: larger;
   }
 
 #date_log{
