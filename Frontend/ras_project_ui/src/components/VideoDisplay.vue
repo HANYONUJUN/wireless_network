@@ -24,12 +24,12 @@
               <input type="date" v-model="date">
             </div>
           </div>
-          <button id="info_btn">등록</button>
+          <button id="info_btn" @click="saveUserInfo">등록</button>
         </td>
 
         <td>
           <div class="rectangle2" id="log_it">
-            <div>
+            <div class="log_date_text">
               <div v-for="(logs, date) in groupedLogs" :key="date" id="date_log">
               <h2>-- {{ date }} --</h2>
               <div v-for="log in logs" :key="log.seq" id="key_word">
@@ -43,10 +43,9 @@
           </div>
         </div>
       </td>
-
-      </tr>
-    </table>
-  </div>
+    </tr>
+  </table>
+</div>
 </template>
 
 <script>
@@ -65,15 +64,32 @@ export default {
       phone: "",
       logs: [],  // logs 배열 추가
       date: "",
+      userInfo: null,
+      wsUserInfo: null,
     };
   },
   methods: {
+
+    saveUserInfo(){
+      this.userInfo ={ name: this.name, phone: this.phone};
+    },
+
     startStreaming() {
       this.isStreaming = true;
       this.ws = websocket.initWebSocket();
+      this.wsUserInfo = new WebSocket("ws://localhost:test ip 주소");
+
 
       this.ws.onopen = () => {
-        this.ws.send(this.name + "," + this.phone);
+        if (this.userInfo) {
+          this.ws.send(JSON.stringify(this.userInfo));
+        }
+      };
+
+      this.wsUserInfo.onopen = () => {
+        if (this.userInfo) {
+          this.wsUserInfo.send(JSON.stringify(this.userInfo)); // 사용자 정보 전송
+        }
       };
 
       this.ws.onmessage = event => {
@@ -85,9 +101,11 @@ export default {
         console.error("WebSocket closed:", event);
       };
     },
+
     setCurrentData() {
       this.date = websocket.getCurrentData(); //날짜 설정 메소드 추가
     },
+
     fetchLogData() {
       axios.get(process.env.VUE_APP_API_URL) // API 주소 수정
       .then(response => {
@@ -97,6 +115,7 @@ export default {
       .catch(error => console.error(error));
     },
   },
+
   computed: {
     groupedLogs() {
       return this.logs.reduce((groups, log) =>{
@@ -109,6 +128,7 @@ export default {
       }, {});
     }
   },
+
   created() {
     this.setCurrentData();
     this.fetchLogData(); // 컴포넌트가 생성될 때 로그 데이터를 가져옴
