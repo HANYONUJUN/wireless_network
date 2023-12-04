@@ -62,6 +62,7 @@ async def websocket_imagedata(websocket: WebSocket):
                 nparr = np.frombuffer(img_data, np.uint8)
                 img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
+                await pitofront(img_data)
 
                 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
                 ai_img, flag = process_image(img, "AI/best_model_cpu.h5", f"AI/result/{current_time}.jpg")
@@ -81,12 +82,12 @@ async def websocket_imagedata(websocket: WebSocket):
                     db.add(log)
                     db.commit()
                     db.close()
-
-                if ai_img is not None:
-                    ai_data = base64.b64decode(ai_img)
-                    await pitofront(ai_data)
-                else:
-                    await pitofront(img_data)
+                #
+                # if ai_img is not None:
+                #     ai_data = base64.b64decode(ai_img)
+                #     await pitofront(ai_data)
+                # else:
+                #     await pitofront(img_data)
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
     except Exception as e:
@@ -128,7 +129,7 @@ def logs():
     로그 출력
     """
     db = session()
-    val = db.query(Log).order_by(Log.logtime).all()
+    val = db.query(Log).order_by(-Log.logtime).all()
     db.close()
     return val
 
