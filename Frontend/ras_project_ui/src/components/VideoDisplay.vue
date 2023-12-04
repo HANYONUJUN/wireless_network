@@ -62,23 +62,34 @@ export default {
       ws: null,
       name: "",
       phone: "",
-      logs: [],  // logs 배열 추가
       date: "",
+      logs: [],  // logs 배열 추가
       userInfo: null,
       wsUserInfo: null,
     };
   },
   methods: {
-
     saveUserInfo(){
-      this.userInfo ={ name: this.name, phone: this.phone};
+      if(!this.name || !this.phone || !this.date) {
+        alert("입력되지 않은 정보가 있습니다");
+        return;
+      }
+
+      this.userInfo ={ name: this.name, phone: this.phone, date:this.date};
     },
 
     startStreaming() {
-      this.isStreaming = true;
-      this.ws = websocket.initWebSocket();
-      this.wsUserInfo = new WebSocket("ws://localhost:test ip 주소");
-
+      if (!this.userInfo) {
+        alert('사용자 정보가 등록되지 않았습니다.');
+        return;
+      }else{
+        if(this.userInfo != null) {
+          alert('사용자 정보 등록 완료');
+          this.isStreaming = true;
+          this.ws = websocket.initWebSocket();
+          this.wsUserInfo = new WebSocket("ws://localhost:9998");
+        }
+      }
 
       this.ws.onopen = () => {
         if (this.userInfo) {
@@ -89,7 +100,7 @@ export default {
       this.wsUserInfo.onopen = () => {
         if (this.userInfo) {
           this.wsUserInfo.send(JSON.stringify(this.userInfo)); // 사용자 정보 전송
-        }
+        } 
       };
 
       this.ws.onmessage = event => {
