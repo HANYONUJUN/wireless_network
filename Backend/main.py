@@ -45,7 +45,7 @@ userinfo = {}
 
 @app.websocket("/ws_a")
 async def websocket_imagedata(websocket: WebSocket):
-    global ai_data
+    global ai_data, userinfo
     await websocket.accept()
     flagdate = datetime.now()
     try:
@@ -64,7 +64,8 @@ async def websocket_imagedata(websocket: WebSocket):
 
 
                 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-                ai_img, flag = process_image(img, "AI/fall_detection_model.h5", f"AI/result/{current_time}.jpg")
+                ai_img, flag = process_image(img, "AI/best_model_cpu.h5", f"AI/result/{current_time}.jpg")
+                print(flag, userinfo)
                 if flag and userinfo:
                     log = Log()
                     log.administrator = userinfo.get('name', 'admin')
@@ -95,6 +96,7 @@ async def websocket_imagedata(websocket: WebSocket):
 # 프론트에서 받을 이미지 통신용 소켓
 @app.websocket("/ws_b")
 async def websocket_htmlimagedata(websocket: WebSocket):
+    global userinfo
     await websocket.accept()
     websocket_b_connections.append(websocket)
     try:
