@@ -90,6 +90,8 @@ async def websocket_imagedata(websocket: WebSocket):
                 #     await pitofront(img_data)
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
+        userinfo = {}
+
     except Exception as e:
         print(f"WebSocket connection closed: {e}")
 
@@ -108,6 +110,7 @@ async def websocket_htmlimagedata(websocket: WebSocket):
             userinfo = json.loads(data)
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
+        userinfo = {}
 
 # 웹소켓초기화
 @app.get("/reset")

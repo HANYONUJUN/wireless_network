@@ -141,7 +141,7 @@ export default {
       .then(response => {
         console.log(response.data); // 응답 데이터 콘솔에 출력
         this.logs = response.data; // 응답 데이터를 logs 변수에 저장
-        //this.latestImage="/home/net/wn/inhatc/Backend/AI/result/"+this.logs[0].logpath;
+        this.latestImage="/home/net/wn/inhatc/Backend/AI/result/"+this.logs[0].logpath;
 
       })
       .catch(error => console.error(error));
@@ -164,10 +164,11 @@ export default {
   created() {
     this.setCurrentData();
     this.fetchLogData(); // 컴포넌트가 생성될 때 로그 데이터를 가져옴
-    // 30초마다 fetchLogData 함수 호출
-    // setInterval(() => {
-    //   this.fetchLogData();
-    // }, 30000);
+
+      // 30초마다 fetchLogData 함수 호출
+    setInterval(() => {
+      this.fetchLogData();
+    }, 30000);
   },
 };
 </script>
