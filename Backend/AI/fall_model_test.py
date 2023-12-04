@@ -1,5 +1,8 @@
 import base64
 import os
+
+from dotenv import load_dotenv
+
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 
 import cv2
@@ -13,9 +16,13 @@ from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 
+load_dotenv()
+yolov4_weightes = os.getenv('yolov4_weightes')
+yolov4_cfg = os.getenv('yolov4_cfg')
+
 def process_image(img, model_path, output_path):
     # YOLO 모델 로드
-    net = cv2.dnn.readNet("AI/yolov4.weights", "AI/yolov4.cfg")
+    net = cv2.dnn.readNet(yolov4_weightes, yolov4_cfg)
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
     classes = []
