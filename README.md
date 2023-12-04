@@ -1,4 +1,4 @@
-<img width="557" alt="image" src="https://github.com/inhatc-wn/inhatc/assets/113413158/4992cf72-6d90-43c6-9711-6ad8503020a2"># 1조 무선네트워크 프로젝트
+# 1조 무선네트워크 프로젝트
 **팀원 : 김민규(MMMMins/조장), 한용준(HANYONUJUN), 서예령(yeryeong0519@), 신건호(geonhooo), 이정우(wjddn8038), 김건우(inhatckgw)**
 
 --- 
