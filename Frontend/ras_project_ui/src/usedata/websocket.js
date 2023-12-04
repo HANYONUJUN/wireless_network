@@ -1,6 +1,6 @@
 // websocket.js
-const initWebSocket = () => {
-  const ws = new WebSocket(process.env.VUE_APP_WEBSOCKET_URL);
+const initWebSocket = (serverUrl) => {
+  const ws = new WebSocket(serverUrl || process.env.VUE_APP_WEBSOCKET_URL);
   return ws;
 };
 
@@ -13,7 +13,6 @@ const getCurrentData = () => {
 
   return yyyy + '-' + mm + '-' + dd;
 }
-
 
 export default {
   initWebSocket,

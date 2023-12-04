@@ -36,6 +36,11 @@ body{
     margin-top:-14%;
 }
 
+#serve_img2{
+    width: 700px;
+    height: 500px;
+}
+
 .rectangle2{
     margin-top: 4%;
     width: 900px;
@@ -93,8 +98,9 @@ body{
     color: white;
 }
 
-#key_word{
+.key_word{
     color:white;
+    text-align: center;
 }
 
 

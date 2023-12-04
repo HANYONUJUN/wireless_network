@@ -4,12 +4,12 @@
       <tr>
         <td>
           <div class="rectangle">
-            <img id="liveImage" :src="isStreaming ? videoSource : ''" alt="Live Image">
+            <img id="liveImage" :src="videoSource" alt="Live Image">
           </div>
         </td>
         <td>
           <div class="rectangle" id="serve_img">
-
+            <img :src="latestImage" alt="Latest Image" id="serve_img2">
           </div>
         </td>
 
@@ -32,13 +32,15 @@
             <div class="log_date_text">
               <div v-for="(logs, date) in groupedLogs" :key="date" id="date_log">
               <h2>-- {{ date }} --</h2>
-              <div v-for="log in logs" :key="log.seq" id="key_word">
-                <span>{{ log.administrator }} | </span>
-                <span>{{ log.phone }} | </span>
-                <span>{{ log.logtime }} | </span>
-                <span>{{ log.logpath }} | </span>
-                <span>{{ log.smsflag }}</span>
-              </div>
+              <table v-for="log in logs" :key="log.seq" class="key_word">
+                  <tr>
+                    <td>{{ log.administrator }}</td>
+                    <td>{{ log.phone }}</td>
+                    <td>{{ formatDateTime(log.logtime) }}</td>
+                    <td>{{ log.logpath }}</td>
+                    <td>{{ log.smsflag }}</td>
+                  </tr>
+              </table>
             </div>
           </div>
         </div>
@@ -52,6 +54,7 @@
 import axios from 'axios';
 import websocket from '../usedata/websocket';
 import '../css/main.css';
+import { format } from 'date-fns';
 
 
 export default {
@@ -64,53 +67,37 @@ export default {
       phone: "",
       date: "",
       logs: [],  // logs 배열 추가
-      userInfo: null,
-      wsUserInfo: null,
+      latestImage: '',
     };
   },
-  methods: {
-    saveUserInfo(){
-      if(!this.name || !this.phone || !this.date) {
-        alert("입력되지 않은 정보가 있습니다");
-        return;
-      }
 
-      this.userInfo ={ name: this.name, phone: this.phone, date:this.date};
-    },
+  methods: { 
 
-    startStreaming() {
-      if (!this.userInfo) {
-        alert('사용자 정보가 등록되지 않았습니다.');
-        return;
-      }else{
-        if(this.userInfo != null) {
-          alert('사용자 정보 등록 완료');
-          this.isStreaming = true;
-          this.ws = websocket.initWebSocket();
-          this.wsUserInfo = new WebSocket("ws://localhost:9998");
-        }
-      }
+    formatDateTime(dateTime) {
+      // 'yyyy-MM-dd HH:mm:ss' 형식으로 포맷
+      return format(new Date(dateTime), 'yyyy-MM-dd HH:mm:ss');
+     },
 
-      this.ws.onopen = () => {
-        if (this.userInfo) {
-          this.ws.send(JSON.stringify(this.userInfo));
-        }
-      };
-
-      this.wsUserInfo.onopen = () => {
-        if (this.userInfo) {
-          this.wsUserInfo.send(JSON.stringify(this.userInfo)); // 사용자 정보 전송
-        } 
-      };
+     startStreaming() {
+     this.isStreaming = true;
+     this.ws = websocket.initWebSocket();
+    
 
       this.ws.onmessage = event => {
         const blob = new Blob([event.data], { type: 'image/jpeg' });
-        this.videoSource = URL.createObjectURL(blob);
+        const imageUrl = URL.createObjectURL(blob);
+        this.videoSource = imageUrl;
+        this.latestImage = imageUrl;
       };
 
       this.ws.onclose = event => {
         console.error("WebSocket closed:", event);
       };
+
+      this.ws.onerror = error => {
+        console.error("WebSocket error:", error);
+      };
+
     },
 
     setCurrentData() {
