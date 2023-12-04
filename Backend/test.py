@@ -65,6 +65,9 @@ async def handle_image_data(websocket: WebSocket, data_json):
         # 이미지 처리를 비동기로 호출
         ai_img_future = process_image_async(img, "AI/fall_detection_model.h5", f"AI/result/{current_time}.jpg")
 
+        # 다른 작업 수행 가능
+        # ...
+
         ai_img = await ai_img_future
 
         if ai_img is not None:
@@ -74,6 +77,7 @@ async def handle_image_data(websocket: WebSocket, data_json):
             await pitofront(img_data)
 @app.websocket("/ws_a")
 async def websocket_imagedata(websocket: WebSocket):
+    await websocket.accept()
     try:
         while True:
             data = await websocket.receive_text()
