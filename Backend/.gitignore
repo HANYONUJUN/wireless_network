@@ -1,1 +1,6 @@
 .env
+AI/yolov4.weights
+AI/yolov4.cfg
+AI/result
+AI/best_model_cpu.h5
+AI/fall_detection_model.h5
