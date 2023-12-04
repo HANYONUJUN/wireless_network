@@ -6,14 +6,15 @@ import numpy as np
 import pymysql
 import os
 
+from starlette.middleware.cors import CORSMiddleware
 from twilio.rest import Client
 from fastapi import FastAPI, WebSocket
 from sqlalchemy.orm import sessionmaker
 from starlette.websockets import WebSocketDisconnect
 from typing import List
 from datetime import datetime
-from Backend.AI.fall_model_test import process_image
-from Backend.model.schema import Logs
+from AI.fall_model_test import process_image
+from model.schema import Logs
 from model.model import ImageData, Log
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
@@ -32,6 +33,13 @@ session = sessionmaker(bind=engine)
 
 websocket_b_connections: List[WebSocket] = []
 i = 0
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.websocket("/ws_a")
 async def websocket_imagedata(websocket: WebSocket):
     global ai_data
@@ -85,7 +93,7 @@ async def websocket_htmlimagedata(websocket: WebSocket):
     try:
         while True:
             # 프론트에서 관리자 정보 수신
-            data = await websocket.recv()
+            data = await websocket.receive_text()
             print(f"Received from B: {data}")
             splitdata = data.split(',')
             name = splitdata[0]

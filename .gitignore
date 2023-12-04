@@ -1,5 +1,13 @@
 .idea/*
 Backend/.idea/*
+Backend/.env
+Backend/AI/yolov4.weights
+Backend/AI/yolov4.cfg
+Backend/AI/result
+Backend/AI/best_model_cpu.h5
+Backend/AI/fall_detection_model.h5
+
+
 fall_model/.idea/*
 Frontend/.idea/*
 Raspberry/.idea/*

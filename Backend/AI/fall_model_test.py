@@ -18,7 +18,7 @@ from keras.models import load_model
 
 
 def process_image(img, model_path, output_path):
-    load_dotenv('../.env')
+    load_dotenv('../')
     yolov4_weightes = os.getenv('yolov4_weightes')
     yolov4_cfg = os.getenv('yolov4_cfg')
     # YOLO 모델 로드
