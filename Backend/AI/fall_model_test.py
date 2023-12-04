@@ -1,8 +1,13 @@
 import base64
 import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+
 import cv2
 import numpy as np
 from sklearn.model_selection import train_test_split
+
+from tensorflow import keras
+
 from keras.utils import to_categorical
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
@@ -11,9 +16,12 @@ from keras.models import load_model
 
 def process_image(img, model_path, output_path):
     # YOLO 모델 로드
-    net = cv2.dnn.readNet("/Users/min/Documents/Program/wn/inhatc/Backend/AI/yolov4.weights", "/Users/min/Documents/Program/wn/inhatc/Backend/AI/yolov4.cfg")
+    net = cv2.dnn.readNet("/home/net/wn/inhatc/Backend/AI/yolov4.weights", "/home/net/wn/inhatc/Backend/AI/yolov4.cfg")
+    net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
+    net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
     classes = []
-    with open("/Users/min/Documents/Program/wn/inhatc/Backend/AI/coco.names", "r") as f:
+
+    with open("/home/net/wn/inhatc/Backend/AI/coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
     layer_names = net.getUnconnectedOutLayersNames()
     # 이미지 읽기
@@ -80,6 +88,7 @@ def process_image(img, model_path, output_path):
                             _, img_encoded = cv2.imencode('.jpg', img)
                             img_bytes = base64.b64encode(img_encoded.tobytes())
                             img_str = img_bytes.decode('utf-8')
+                            cv2.imwrite(output_path, img)
                             return img_str
                         else:
                             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)

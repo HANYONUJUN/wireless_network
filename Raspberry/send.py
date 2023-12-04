@@ -6,12 +6,12 @@ import base64
 
 async def send_video():
     # FastAPI 웹 소켓통신
-    uri = "ws://localhost:23241/ws_a"
+    uri = "ws://211.105.65.25:23241/ws_a"
 
     async with websockets.connect(uri) as websocket:
         
         # 이때 타 프로그램에서 카메라를 사용중인경우 에러가 발생하니, 주의할 것
-        cap = cv2.VideoCapture(0)
+        cap = cv2.VideoCapture(1)
         
         # 초당 20프레임 제한 걸어서 통신
         # 없을경우 이미지 로드가 이상해지는 상태를 발견함
