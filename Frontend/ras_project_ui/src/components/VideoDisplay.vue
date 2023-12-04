@@ -141,7 +141,7 @@ export default {
       .then(response => {
         console.log(response.data); // 응답 데이터 콘솔에 출력
         this.logs = response.data; // 응답 데이터를 logs 변수에 저장
-          this.latestImage="/home/net/wn/inhatc/Backend/AI/result"+this.logs[0].logpath
+        this.latestImage="/home/net/wn/inhatc/Backend/AI/result/"+this.logs[0].logpath;
 
       })
       .catch(error => console.error(error));
