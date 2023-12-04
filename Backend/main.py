@@ -12,7 +12,7 @@ from fastapi import FastAPI, WebSocket
 from sqlalchemy.orm import sessionmaker
 from starlette.websockets import WebSocketDisconnect
 from typing import List
-from datetime import datetime
+from datetime import datetime, timedelta
 from AI.fall_model_test import process_image
 from model.schema import Logs
 from model.model import ImageData, Log
@@ -41,11 +41,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+userinfo = {}
+
 @app.websocket("/ws_a")
 async def websocket_imagedata(websocket: WebSocket):
     global ai_data
     await websocket.accept()
-
+    flagdate = datetime.now()
     try:
         while True:
             data = await websocket.receive_text()
@@ -63,8 +65,21 @@ async def websocket_imagedata(websocket: WebSocket):
 
                 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
                 ai_img, flag = process_image(img, "AI/fall_detection_model.h5", f"AI/result/{current_time}.jpg")
-
-                print(websocket_c_dict.get(websocket, {}))
+                if flag and userinfo:
+                    log = Log()
+                    log.administrator = userinfo.get('name', 'admin')
+                    log.phone = userinfo.get('phone', '-')
+                    log.smsflag = False
+                    log.logpath = f"{current_time}.jpg"
+                    timediff = datetime.now() - flagdate
+                    if timediff.total_seconds() >= 30:
+                        print('30초 경과')
+                        log.smsflag = True
+                        flagdate = datetime.now()
+                    db = session()
+                    db.add(log)
+                    db.commit()
+                    db.close()
 
                 if ai_img is not None:
                     ai_data = base64.b64decode(ai_img)
@@ -87,8 +102,7 @@ async def websocket_htmlimagedata(websocket: WebSocket):
             # 프론트에서 관리자 정보 수신
             data = await websocket.receive_text()
             print(f"Received from B: {data}")
-            data_dict = json.loads(data)
-            websocket_c_dict[websocket] = json.loads(data)
+            userinfo = json.loads(data)
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
 
@@ -113,6 +127,7 @@ def logs():
     """
     db = session()
     val = db.query(Log).order_by(Log.logtime).all()
+    db.close()
     return val
 
 @app.post("/app/v1/sms")
