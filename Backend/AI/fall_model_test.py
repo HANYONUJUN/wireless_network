@@ -16,7 +16,7 @@ from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from keras.callbacks import ModelCheckpoint
 from keras.models import load_model
 
-load_dotenv()
+load_dotenv('../.env')
 yolov4_weightes = os.getenv('yolov4_weightes')
 yolov4_cfg = os.getenv('yolov4_cfg')
 
