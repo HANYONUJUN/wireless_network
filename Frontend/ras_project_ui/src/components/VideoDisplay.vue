@@ -29,17 +29,29 @@
 
         <td>
           <div class="rectangle2" id="log_it">
-            <div class="log_date_text">
+            <div class="log_date_text"  >
               <div v-for="(logs, date) in groupedLogs" :key="date" id="date_log">
               <h2>-- {{ date }} --</h2>
-              <table v-for="log in logs" :key="log.seq" class="key_word">
-                  <tr>
-                    <td>{{ log.administrator }}</td>
-                    <td>{{ log.phone }}</td>
-                    <td>{{ formatDateTime(log.logtime) }}</td>
-                    <td>{{ log.logpath }}</td>
-                    <td>{{ log.smsflag }}</td>
-                  </tr>
+              <table border="1" style="margin: auto">
+                  <thead>
+                    <tr>
+                      <th>관리자ID</th>
+                      <th>전화번호</th>
+                      <th>로그발생시간</th>
+                      <th>로그경로</th>
+                      <th>SMS수신여부</th>
+                    </tr>
+
+                  </thead>
+                  <tbody  v-for="log in logs" :key="log.seq" class="key_word">
+                    <tr>
+                      <td>{{ log.administrator }}</td>
+                      <td>{{ log.phone }}</td>
+                      <td>{{ formatDateTime(log.logtime) }}</td>
+                      <td>{{ log.logpath }}</td>
+                      <td>{{ log.smsflag }}</td>
+                    </tr>
+                  </tbody>
               </table>
             </div>
           </div>
@@ -72,6 +84,15 @@ export default {
   },
 
   methods: { 
+    saveUserInfo(){
+      if(!this.name || !this.phone || !this.date) {
+        alert("입력되지 않은 정보가 있습니다");
+        return;
+      }
+
+      this.userInfo ={ name: this.name, phone: this.phone, date:this.date};
+      alert('사용자 정보 등록 완료');
+    },
 
     formatDateTime(dateTime) {
       // 'yyyy-MM-dd HH:mm:ss' 형식으로 포맷
@@ -79,9 +100,20 @@ export default {
      },
 
      startStreaming() {
-     this.isStreaming = true;
-     this.ws = websocket.initWebSocket();
-    
+      if (!this.userInfo) {
+        alert('사용자 정보가 등록되지 않았습니다.');
+        return;
+      }else {
+        if (this.userInfo != null) {
+          this.isStreaming = true;
+          this.ws = websocket.initWebSocket();
+        }
+      }
+        this.ws.onopen = () => {
+        if (this.userInfo) {
+          this.ws.send(JSON.stringify(this.userInfo));
+        }
+      };
 
       this.ws.onmessage = event => {
         const blob = new Blob([event.data], { type: 'image/jpeg' });

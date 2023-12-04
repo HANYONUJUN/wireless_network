@@ -32,7 +32,8 @@ engine = create_engine(
 session = sessionmaker(bind=engine)
 
 websocket_b_connections: List[WebSocket] = []
-i = 0
+websocket_c_dict = {}
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -61,24 +62,15 @@ async def websocket_imagedata(websocket: WebSocket):
 
 
                 current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-                ai_img = process_image(img, "AI/fall_detection_model.h5", f"AI/result/{current_time}.jpg")
-                # 이미지 저장
+                ai_img, flag = process_image(img, "AI/fall_detection_model.h5", f"AI/result/{current_time}.jpg")
+
+                print(websocket_c_dict.get(websocket, {}))
 
                 if ai_img is not None:
                     ai_data = base64.b64decode(ai_img)
                     await pitofront(ai_data)
                 else:
                     await pitofront(img_data)
-                # 임시 이미지 저장 a.jpg
-                #
-                # cv2.imwrite(image_path, img)
-
-                # 이미지 저장시 사용
-                # result = {"image_path": image_path}
-                # if ai_data is not None:
-                #     await pitofront(ai_data)
-                # else:
-                #     await pitofront(img_data)
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
     except Exception as e:
@@ -95,9 +87,8 @@ async def websocket_htmlimagedata(websocket: WebSocket):
             # 프론트에서 관리자 정보 수신
             data = await websocket.receive_text()
             print(f"Received from B: {data}")
-            splitdata = data.split(',')
-            name = splitdata[0]
-            phonenumber = splitdata[1]
+            data_dict = json.loads(data)
+            websocket_c_dict[websocket] = json.loads(data)
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
 

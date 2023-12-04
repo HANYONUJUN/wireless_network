@@ -95,17 +95,17 @@ def process_image(img, model_path, output_path):
                             img_bytes = base64.b64encode(img_encoded.tobytes())
                             img_str = img_bytes.decode('utf-8')
                             cv2.imwrite(output_path, img)
-                            return img_str
+                            return img_str, True
                         else:
                             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
                             cv2.putText(img, "not_fall", (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-                            return None
+                            return None, False
 
             # 결과 이미지 출력
             cv2.imwrite(output_path, img)
             #cv2.imshow("Result", img)
             #cv2.waitKey(0)
             cv2.destroyAllWindows()
-        return None
+        return None, False
 
 # 이미지 처리 함수 호출
