@@ -116,7 +116,8 @@ export default {
       };
 
       this.ws.onmessage = event => {
-        const blob = new Blob([event.data], { type: 'image/jpeg' });
+        const blob = new Blob([event.data['image']], { type: 'image/jpeg' });
+        console.log(blob)
         const imageUrl = URL.createObjectURL(blob);
         this.videoSource = imageUrl;
         this.latestImage = imageUrl;

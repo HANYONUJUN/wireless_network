@@ -84,9 +84,9 @@ async def websocket_imagedata(websocket: WebSocket):
 
                 if ai_img is not None:
                     ai_data = base64.b64decode(ai_img)
-                    await pitofront(ai_data)
+                    await pitofront({"image": ai_data})
                 else:
-                    await pitofront(img_data)
+                    await pitofront({"image": img_data})
     except WebSocketDisconnect:
         websocket_b_connections.remove(websocket)
     except Exception as e:
@@ -143,11 +143,11 @@ def smsrequest(phone: str = None):
 
 
 # 두 소켓간 통신용
-async def pitofront(image_path: bytes):
+async def pitofront(image_path: dict):
     try:
         for connection in websocket_b_connections:
             # 이미지 데이터와 함께 데이터를 전송
-            await connection.send_bytes(image_path)
+            await connection.send_json(image_path)
     except WebSocketDisconnect as e:
         print(f"WebSocket connection closed: {e}")
     except Exception as e:
