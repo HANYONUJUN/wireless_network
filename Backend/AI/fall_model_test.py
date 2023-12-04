@@ -6,7 +6,6 @@ import cv2
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-from tensorflow import keras
 
 from keras.utils import to_categorical
 from keras.models import Sequential
@@ -16,12 +15,12 @@ from keras.models import load_model
 
 def process_image(img, model_path, output_path):
     # YOLO 모델 로드
-    net = cv2.dnn.readNet("/home/net/wn/inhatc/Backend/AI/yolov4.weights", "/home/net/wn/inhatc/Backend/AI/yolov4.cfg")
+    net = cv2.dnn.readNet("AI/yolov4.weights", "AI/yolov4.cfg")
     net.setPreferableBackend(cv2.dnn.DNN_BACKEND_OPENCV)
     net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
     classes = []
 
-    with open("/home/net/wn/inhatc/Backend/AI/coco.names", "r") as f:
+    with open("AI/coco.names", "r") as f:
         classes = [line.strip() for line in f.readlines()]
     layer_names = net.getUnconnectedOutLayersNames()
     # 이미지 읽기
